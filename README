@@ -1,0 +1,27 @@
+This is Perl module SQL::Translator::Producer::PlantUML::Entity.
+
+INSTALLATION
+
+SQL::Translator::Producer::PlantUML::Entity installation is straightforward. If your cpanm shell is set up,
+you should just be able to do
+
+    % cpanm https://github.com/Likk/p5-SQL-Translator-Producer-PlantUML-Entity.git
+
+Download it, unpack it, then build it as per the usual:
+
+    % perl Makefile.PL
+    % make && make test
+
+Then install it:
+
+    % make install
+
+DOCUMENTATION
+
+SQL::Translator::Producer::PlantUML::Entity documentation is available as in POD. So you can do:
+
+    % perldoc SQL::Translator::Producer::PlantUML::Entity
+
+to read the documentation online with your favorite pager.
+
+likkradyus
