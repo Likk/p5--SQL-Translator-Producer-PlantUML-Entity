@@ -47,7 +47,7 @@ entity [% table.name %] {
         IF constraint.field_names.size() == 1;
 %]    # [% field_name %] [FK([% constraint.reference_table %].[% constraint.reference_fields %])]
 [%      ELSE;
-%]    # [% field_name %] <<FK>>
+%]    # [% field_name %] [FK]
 [%
         END;
      END;
