@@ -23,57 +23,57 @@ __DATA__
 @startuml
 [%
 FOREACH table IN schema.get_tables;
-  SET has_primary_key=0;
-  SET has_foreign_key=0;
-%]
+  SET has_primary_key=0; %]
 entity [% table.name %] {
 [%
   #primary_key fields.
-  FOREACH field IN table.get_fields.sort();
+  FOREACH field IN table.get_fields;
     IF field.is_primary_key;
-      has_primary_key = 1;
-%]    + [% field %] [% field.data_type %] [% field.size ? '(' _ field.size _ ')' :''%]
-[%  END;
-    IF loop.last AND has_primary_key;
-      '    ==' %]
-[%  END;
+      has_primary_key = 1; -%]
+    + [% field %] [% field.data_type %] [% field.size ? '(' _ field.size _ ')' :''%]
+[%
+    END;
+    IF loop.last AND has_primary_key -%]
+    ==
+[%
+    END;
   END; #primary_key end.
 
   # foreign_key fields.
   FOREACH constraint IN table.get_constraints;
     IF constraint.type == 'FOREIGN KEY';
-      has_foreign_key=1;
       FOR field_name IN constraint.field_names;
-        IF constraint.field_names.size() == 1;
-%]    # [% field_name %] [FK([% constraint.reference_table %].[% constraint.reference_fields %])]
-[%      ELSE;
-%]    # [% field_name %] [FK]
+        IF constraint.field_names.size() == 1; -%]
+    # [% field_name %] [FK([% constraint.reference_table %].[% constraint.reference_fields %])]
+[%      ELSE; # multiple foreign key -%]
+    # [% field_name %] [FK]
 [%
         END;
-     END;
+      END;
     END;
   END; # foreign_key end.
 
   # not pk, fk fields.
   FOREACH field IN table.get_fields;
     IF NOT field.is_primary_key AND
-       NOT field.is_foreign_key;
-%]    [% field %] [% field.data_type %] [% field.size ? '(' _ field.size _ ')' :''%]
+       NOT field.is_foreign_key; -%]
+    [% field %] [% field.data_type %] [% field.size ? '(' _ field.size _ ')' :''%]
 [%  END;
   END #not pk, fk fields end. -%]
 }
 [% END %]
-[% #reration
+[% # table relationship
 FOREACH table IN schema.get_tables;
-  SET left_right = {};
+  SET left_right = {}; # for multiple foreign key.
   FOREACH cont IN table.get_constraints;
     IF cont.type.lower.match('foreign key');
       key = cont.reference_table _ '_' _ table.name;
-      IF NOT left_right.${key} == 1;
-%][% cont.reference_table %] ----|{ [% table.name %]
-[%       left_right.${key} =1;
+      IF NOT left_right.${key} == 1; -%]
+[% cont.reference_table %] ----|{ [% table.name %]
+[%
+       left_right.${key} =1;
       END;
-   END;
+    END;
   END;
 END; #reration end. %]
 @enduml
